@@ -38,7 +38,7 @@ asynchronous responses by returning a core.async channel for body.
 To connect to a server endpoint that returns an event stream in ClojureScript, eventual provides a
 helper function that returns a core.async channel but user `EventSource` behind the scenes.
 
-```cljs
+```clj
 (ns client-events-sample
   (:require [clojure.core.async :refer [<!]]
             [ninjudd.eventual.client :refer [edn-events]])
