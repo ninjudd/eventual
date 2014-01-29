@@ -5,8 +5,7 @@
 (defn add-sse-headers [request]
   (update-in request [:headers] assoc
              "Content-Type" "text/event-stream; charset=utf-8"
-             "Cache-Control" "no-cache"
-             "Connection" "keep-alive"))
+             "Cache-Control" "no-cache"))
 
 (defn sse-channel [f events]
   (let [out (chan)]
