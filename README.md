@@ -40,7 +40,7 @@ helper function that returns a core.async channel but user `EventSource` behind 
 
 ```clj
 (ns client-events-sample
-  (:require [clojure.core.async :refer [<!]]
+  (:require [cljs.core.async :refer [<!]]
             [ninjudd.eventual.client :refer [edn-events]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
