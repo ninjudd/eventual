@@ -1,17 +1,23 @@
 (ns ninjudd.eventual.client
-  (:require [cljs.core.async :refer [put! chan]]
+  (:require [cljs.core.async :as async]
             [cljs.reader :refer [read-string]]))
 
-(defn event-source-channel [f url]
+(defn event-source [f url]
   (let [source (new js/EventSource url)
-        out (chan)]
+        channel (async/chan)]
     (.addEventListener source "message"
                        (fn [e]
-                         (put! out (f (.-data e)))))
-    out))
+                         (async/put! channel (f (.-data e)))))
+    {:event-source source
+     :channel channel}))
 
-(defn edn-events [url]
-  (event-source-channel read-string url))
+(defn edn-event-source [url]
+  (event-source read-string url))
 
-(defn json-events [url]
-  (event-source-channel #(.parse js/JSON %) url))
+(defn json-event-source [url]
+  (event-source #(.parse js/JSON %) url))
+
+(defn close! [{:keys [channel event-source]}]
+  (when event-source
+    (.close event-source))
+  (async/close! channel))
