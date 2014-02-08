@@ -7,24 +7,29 @@
              "Content-Type" "text/event-stream; charset=utf-8"
              "Cache-Control" "no-cache"))
 
-(defn sse-channel [f events]
-  (let [out (chan)]
+(defn sse-channel [f events & [opts]]
+  (let [out (chan)
+        disconnect (if-let [t (:timeout opts)]
+                     (timeout t)
+                     (chan))]
     (go (loop []
-          (let [[event ch] (alts! [events (timeout 3000)])]
-            (if (= ch events)
-              (when event
-                (>! out (str "data: " (f event) "\n\n"))
-                (recur))
-              (do
-                (>! out ":keepalive\n")
-                (recur)))))
+          (let [keepalive (timeout (:keepalive opts 25000))
+                [event ch] (alts! [events keepalive disconnect])]
+            (cond
+             (= ch events)
+             (when event
+               (>! out (str "data: " (f event) "\n\n"))
+               (recur))
+             (= ch keepalive)
+             (do (>! out ":keepalive\n")
+                 (recur)))))
         (close! out))
     out))
 
-(defn edn-events [events]
+(defn edn-events [events & [opts]]
   (add-sse-headers
-   {:body (sse-channel pr-str events)}))
+   {:body (sse-channel pr-str events opts)}))
 
-(defn json-events [events]
+(defn json-events [events & [opts]]
   (add-sse-headers
-   {:body (sse-channel json/generate-string events)}))
+   {:body (sse-channel json/generate-string events opts)}))
