@@ -17,7 +17,7 @@
 (defn json-event-source [url]
   (event-source #(.parse js/JSON %) url))
 
-(defn close! [{:keys [channel event-source]}]
+(defn close-event-source! [{:keys [channel event-source]}]
   (when event-source
     (.close event-source))
   (async/close! channel))
