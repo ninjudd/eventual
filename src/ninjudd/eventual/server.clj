@@ -12,7 +12,9 @@
         disconnect (if-let [t (:timeout opts)]
                      (timeout t)
                      (chan))]
-    (go (loop []
+    (go (when-let [retry (:client-retry opts)]
+          (>! out (str "retry: " retry "\n")))
+        (loop []
           (let [keepalive (timeout (:keepalive opts 25000))
                 [event ch] (alts! [events keepalive disconnect])]
             (cond
