@@ -20,6 +20,8 @@
             (cond
              (= ch events)
              (when event
+               (when-let [event-id (:event-id (meta event))]
+                 (>! out (str "id: " event-id "\n")))
                (>! out (str "data: " (f event) "\n\n"))
                (recur))
              (= ch keepalive)
