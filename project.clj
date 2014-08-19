@@ -1,4 +1,4 @@
-(defproject com.ninjudd/eventual "0.3.2"
+(defproject com.ninjudd/eventual "0.3.3"
   :description "Server-Sent Event and EventSource helpers for core.async."
   :url "http://github.com/ninjudd/eventual"
   :license {:name "Eclipse Public License"

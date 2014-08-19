@@ -23,7 +23,7 @@
                (when-let [event-id (:event-id (meta event))]
                  (>! out (str "id: " event-id "\n")))
                (when-let [event-type (:event-type (meta event))]
-                 (>! out (str "event: " event-type "\n")))
+                 (>! out (str "event: " (name event-type) "\n")))
                (>! out (str "data: " (f event) "\n\n"))
                (recur))
              (= ch keepalive)
