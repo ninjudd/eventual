@@ -29,6 +29,7 @@
              (= ch keepalive)
              (do (>! out ":keepalive\n")
                  (recur)))))
+        (close! events)
         (close! out))
     out))
 
