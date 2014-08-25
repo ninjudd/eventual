@@ -29,9 +29,11 @@
                  (when-let [event-type (:event-type (meta event))]
                    (>! out (data "event: " (name event-type) "\n")))
                  (>! out (data "data: " (f event) "\n\n"))
+                 (>! out :flush)
                  (recur))
                (= ch keepalive)
                (do (>! out (data ":keepalive\n"))
+                   (>! out :flush)
                    (recur))))))
         (close! events)
         (close! out))
