@@ -17,6 +17,7 @@
                            (async/put! channel (make-event f event)))))
     (set! (.-onerror source)
           (fn [error]
+            (.close source)
             (async/close! channel)))
     {:event-source source
      :channel channel}))
