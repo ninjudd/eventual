@@ -26,10 +26,10 @@
                (= ch events)
                (when event
                  (let [event-id (:event-id (meta event))
-                       event-id (if (and aggregate event-id LAST-event-id)
+                       event-id (if (and aggregate event-id last-event-id)
                                   (aggregate event-id last-event-id)
                                   event-id)]
-                   (when event-id
+                   (when event-id 
                      (>! out (data "id: " event-id "\n")))
                    (when-let [event-type (:event-type (meta event))]
                      (>! out (data "event: " (name event-type) "\n")))
